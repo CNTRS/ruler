@@ -5,6 +5,7 @@ import { discoverSkills } from '../src/core/SkillsProcessor';
 import {
   ANTIGRAVITY_SKILLS_PATH,
   CLAUDE_SKILLS_PATH,
+  COPILOT_SKILLS_PATH,
   JUNIE_SKILLS_PATH,
   SKILL_MD_FILENAME,
 } from '../src/constants';
@@ -117,12 +118,10 @@ describe('Skills Discovery and Validation', () => {
 
   describe('getSkillsGitignorePaths', () => {
     it('returns selected agent skills paths only', async () => {
-      const { getSkillsGitignorePaths } = await import(
-        '../src/core/SkillsProcessor'
-      );
-      const { AntigravityAgent } = await import(
-        '../src/agents/AntigravityAgent'
-      );
+      const { getSkillsGitignorePaths } =
+        await import('../src/core/SkillsProcessor');
+      const { AntigravityAgent } =
+        await import('../src/agents/AntigravityAgent');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
 
       await fs.mkdir(skillsDir, { recursive: true });
@@ -133,10 +132,9 @@ describe('Skills Discovery and Validation', () => {
       expect(paths).toEqual([path.join(tmpDir, ANTIGRAVITY_SKILLS_PATH)]);
     });
 
-    it('returns claude skills path for copilot agent', async () => {
-      const { getSkillsGitignorePaths } = await import(
-        '../src/core/SkillsProcessor'
-      );
+    it('returns copilot skills path for copilot agent', async () => {
+      const { getSkillsGitignorePaths } =
+        await import('../src/core/SkillsProcessor');
       const { CopilotAgent } = await import('../src/agents/CopilotAgent');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
 
@@ -144,13 +142,12 @@ describe('Skills Discovery and Validation', () => {
 
       const paths = await getSkillsGitignorePaths(tmpDir, [new CopilotAgent()]);
 
-      expect(paths).toEqual([path.join(tmpDir, CLAUDE_SKILLS_PATH)]);
+      expect(paths).toEqual([path.join(tmpDir, COPILOT_SKILLS_PATH)]);
     });
 
     it('returns junie skills path for Junie agent', async () => {
-      const { getSkillsGitignorePaths } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { getSkillsGitignorePaths } =
+        await import('../src/core/SkillsProcessor');
       const { JunieAgent } = await import('../src/agents/JunieAgent');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
 
@@ -213,9 +210,8 @@ describe('Skills Discovery and Validation', () => {
 
   describe('propagateSkillsForClaude', () => {
     it('copies .ruler/skills to .claude/skills preserving structure', async () => {
-      const { propagateSkillsForClaude } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForClaude } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -234,9 +230,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('creates .claude directory if it does not exist', async () => {
-      const { propagateSkillsForClaude } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForClaude } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -251,9 +246,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('uses atomic replace when overwriting existing skills', async () => {
-      const { propagateSkillsForClaude } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForClaude } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
       const claudeSkillsDir = path.join(tmpDir, '.claude', 'skills');
@@ -282,9 +276,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('includes operations in dry-run preview without executing', async () => {
-      const { propagateSkillsForClaude } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForClaude } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -302,9 +295,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('no-ops gracefully when .ruler/skills does not exist', async () => {
-      const { propagateSkillsForClaude } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForClaude } =
+        await import('../src/core/SkillsProcessor');
 
       const steps = await propagateSkillsForClaude(tmpDir, { dryRun: true });
 
@@ -314,9 +306,8 @@ describe('Skills Discovery and Validation', () => {
 
   describe('propagateSkillsForOpenCode', () => {
     it('copies .ruler/skills to .opencode/skills preserving structure', async () => {
-      const { propagateSkillsForOpenCode } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForOpenCode } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -335,9 +326,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('creates .opencode directory if it does not exist', async () => {
-      const { propagateSkillsForOpenCode } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForOpenCode } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -352,9 +342,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('includes operations in dry-run preview without executing', async () => {
-      const { propagateSkillsForOpenCode } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForOpenCode } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -374,9 +363,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('no-ops gracefully when .ruler/skills does not exist', async () => {
-      const { propagateSkillsForOpenCode } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForOpenCode } =
+        await import('../src/core/SkillsProcessor');
 
       const steps = await propagateSkillsForOpenCode(tmpDir, { dryRun: true });
 
@@ -386,9 +374,8 @@ describe('Skills Discovery and Validation', () => {
 
   describe('propagateSkillsForPi', () => {
     it('copies .ruler/skills to .pi/skills preserving structure', async () => {
-      const { propagateSkillsForPi } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForPi } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -403,9 +390,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('creates .pi directory if it does not exist', async () => {
-      const { propagateSkillsForPi } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForPi } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -420,9 +406,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('includes operations in dry-run preview without executing', async () => {
-      const { propagateSkillsForPi } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForPi } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -440,9 +425,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('no-ops gracefully when .ruler/skills does not exist', async () => {
-      const { propagateSkillsForPi } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForPi } =
+        await import('../src/core/SkillsProcessor');
 
       const steps = await propagateSkillsForPi(tmpDir, { dryRun: true });
 
@@ -452,9 +436,8 @@ describe('Skills Discovery and Validation', () => {
 
   describe('propagateSkillsForGoose', () => {
     it('copies .ruler/skills to .agents/skills preserving structure', async () => {
-      const { propagateSkillsForGoose } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForGoose } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -473,9 +456,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('creates .agents directory if it does not exist', async () => {
-      const { propagateSkillsForGoose } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForGoose } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -490,9 +472,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('includes operations in dry-run preview without executing', async () => {
-      const { propagateSkillsForGoose } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForGoose } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -510,9 +491,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('no-ops gracefully when .ruler/skills does not exist', async () => {
-      const { propagateSkillsForGoose } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForGoose } =
+        await import('../src/core/SkillsProcessor');
 
       const steps = await propagateSkillsForGoose(tmpDir, { dryRun: true });
 
@@ -522,9 +502,8 @@ describe('Skills Discovery and Validation', () => {
 
   describe('propagateSkillsForVibe', () => {
     it('copies .ruler/skills to .vibe/skills preserving structure', async () => {
-      const { propagateSkillsForVibe } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForVibe } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -539,9 +518,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('creates .vibe directory if it does not exist', async () => {
-      const { propagateSkillsForVibe } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForVibe } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -556,9 +534,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('includes operations in dry-run preview without executing', async () => {
-      const { propagateSkillsForVibe } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForVibe } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -576,9 +553,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('no-ops gracefully when .ruler/skills does not exist', async () => {
-      const { propagateSkillsForVibe } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForVibe } =
+        await import('../src/core/SkillsProcessor');
 
       const steps = await propagateSkillsForVibe(tmpDir, { dryRun: true });
 
@@ -588,9 +564,8 @@ describe('Skills Discovery and Validation', () => {
 
   describe('propagateSkillsForRoo', () => {
     it('copies .ruler/skills to .roo/skills preserving structure', async () => {
-      const { propagateSkillsForRoo } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForRoo } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -605,9 +580,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('creates .roo directory if it does not exist', async () => {
-      const { propagateSkillsForRoo } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForRoo } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -622,9 +596,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('includes operations in dry-run preview without executing', async () => {
-      const { propagateSkillsForRoo } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForRoo } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -642,9 +615,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('no-ops gracefully when .ruler/skills does not exist', async () => {
-      const { propagateSkillsForRoo } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForRoo } =
+        await import('../src/core/SkillsProcessor');
 
       const steps = await propagateSkillsForRoo(tmpDir, { dryRun: true });
 
@@ -654,9 +626,8 @@ describe('Skills Discovery and Validation', () => {
 
   describe('propagateSkillsForGemini', () => {
     it('copies .ruler/skills to .gemini/skills preserving structure', async () => {
-      const { propagateSkillsForGemini } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForGemini } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -675,9 +646,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('creates .gemini directory if it does not exist', async () => {
-      const { propagateSkillsForGemini } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForGemini } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -692,9 +662,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('includes operations in dry-run preview without executing', async () => {
-      const { propagateSkillsForGemini } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForGemini } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -712,9 +681,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('no-ops gracefully when .ruler/skills does not exist', async () => {
-      const { propagateSkillsForGemini } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForGemini } =
+        await import('../src/core/SkillsProcessor');
 
       const steps = await propagateSkillsForGemini(tmpDir, { dryRun: true });
 
@@ -724,9 +692,8 @@ describe('Skills Discovery and Validation', () => {
 
   describe('propagateSkillsForJunie', () => {
     it('copies .ruler/skills to .junie/skills preserving structure', async () => {
-      const { propagateSkillsForJunie } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForJunie } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -745,9 +712,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('creates .junie directory if it does not exist', async () => {
-      const { propagateSkillsForJunie } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForJunie } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -762,9 +728,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('includes operations in dry-run preview without executing', async () => {
-      const { propagateSkillsForJunie } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForJunie } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -781,9 +746,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('no-ops gracefully when .ruler/skills does not exist', async () => {
-      const { propagateSkillsForJunie } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForJunie } =
+        await import('../src/core/SkillsProcessor');
 
       const steps = await propagateSkillsForJunie(tmpDir, { dryRun: true });
 
@@ -793,9 +757,8 @@ describe('Skills Discovery and Validation', () => {
 
   describe('propagateSkillsForCursor', () => {
     it('copies .ruler/skills to .cursor/skills preserving structure', async () => {
-      const { propagateSkillsForCursor } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForCursor } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -814,9 +777,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('creates .cursor directory if it does not exist', async () => {
-      const { propagateSkillsForCursor } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForCursor } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -831,9 +793,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('includes operations in dry-run preview without executing', async () => {
-      const { propagateSkillsForCursor } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForCursor } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -851,9 +812,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('no-ops gracefully when .ruler/skills does not exist', async () => {
-      const { propagateSkillsForCursor } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForCursor } =
+        await import('../src/core/SkillsProcessor');
 
       const steps = await propagateSkillsForCursor(tmpDir, { dryRun: true });
 
@@ -863,9 +823,8 @@ describe('Skills Discovery and Validation', () => {
 
   describe('propagateSkillsForFactory', () => {
     it('copies .ruler/skills to .factory/skills preserving structure', async () => {
-      const { propagateSkillsForFactory } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForFactory } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -884,9 +843,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('creates .factory directory if it does not exist', async () => {
-      const { propagateSkillsForFactory } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForFactory } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -901,9 +859,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('includes operations in dry-run preview without executing', async () => {
-      const { propagateSkillsForFactory } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForFactory } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -921,9 +878,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('no-ops gracefully when .ruler/skills does not exist', async () => {
-      const { propagateSkillsForFactory } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForFactory } =
+        await import('../src/core/SkillsProcessor');
 
       const steps = await propagateSkillsForFactory(tmpDir, { dryRun: true });
 
@@ -933,9 +889,8 @@ describe('Skills Discovery and Validation', () => {
 
   describe('propagateSkillsForAntigravity', () => {
     it('copies .ruler/skills to .agent/skills preserving structure', async () => {
-      const { propagateSkillsForAntigravity } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForAntigravity } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -954,9 +909,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('creates .agent directory if it does not exist', async () => {
-      const { propagateSkillsForAntigravity } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForAntigravity } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -971,9 +925,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('includes operations in dry-run preview without executing', async () => {
-      const { propagateSkillsForAntigravity } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForAntigravity } =
+        await import('../src/core/SkillsProcessor');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills');
       const skill1 = path.join(skillsDir, 'skill1');
 
@@ -993,9 +946,8 @@ describe('Skills Discovery and Validation', () => {
     });
 
     it('no-ops gracefully when .ruler/skills does not exist', async () => {
-      const { propagateSkillsForAntigravity } = await import(
-        '../src/core/SkillsProcessor'
-      );
+      const { propagateSkillsForAntigravity } =
+        await import('../src/core/SkillsProcessor');
 
       const steps = await propagateSkillsForAntigravity(tmpDir, {
         dryRun: true,
@@ -1008,9 +960,8 @@ describe('Skills Discovery and Validation', () => {
   describe('propagateSkills - selected agents', () => {
     it('only propagates skills for selected agent destinations', async () => {
       const { propagateSkills } = await import('../src/core/SkillsProcessor');
-      const { AntigravityAgent } = await import(
-        '../src/agents/AntigravityAgent'
-      );
+      const { AntigravityAgent } =
+        await import('../src/agents/AntigravityAgent');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills', 'skill1');
 
       await fs.mkdir(skillsDir, { recursive: true });
@@ -1043,7 +994,7 @@ describe('Skills Discovery and Validation', () => {
       ).rejects.toThrow();
     });
 
-    it('propagates copilot skills to claude destination only', async () => {
+    it('propagates copilot skills to .github/skills destination only', async () => {
       const { propagateSkills } = await import('../src/core/SkillsProcessor');
       const { CopilotAgent } = await import('../src/agents/CopilotAgent');
       const skillsDir = path.join(tmpDir, '.ruler', 'skills', 'skill1');
@@ -1053,14 +1004,17 @@ describe('Skills Discovery and Validation', () => {
 
       await propagateSkills(tmpDir, [new CopilotAgent()], true, false, false);
 
-      const claudeSkill = path.join(
+      const copilotSkill = path.join(
         tmpDir,
-        CLAUDE_SKILLS_PATH,
+        COPILOT_SKILLS_PATH,
         'skill1',
         SKILL_MD_FILENAME,
       );
 
-      expect(await fs.readFile(claudeSkill, 'utf8')).toBe('# Skill 1');
+      expect(await fs.readFile(copilotSkill, 'utf8')).toBe('# Skill 1');
+      await expect(
+        fs.access(path.join(tmpDir, CLAUDE_SKILLS_PATH)),
+      ).rejects.toThrow();
       await expect(
         fs.access(path.join(tmpDir, ANTIGRAVITY_SKILLS_PATH)),
       ).rejects.toThrow();
@@ -1098,6 +1052,7 @@ describe('Skills Discovery and Validation', () => {
       const { propagateSkills } = await import('../src/core/SkillsProcessor');
       const { allAgents } = await import('../src/lib');
       const claudeSkillsDir = path.join(tmpDir, '.claude', 'skills');
+      const copilotSkillsDir = path.join(tmpDir, '.github', 'skills');
       const opencodeSkillsDir = path.join(tmpDir, '.opencode', 'skills');
       const piSkillsDir = path.join(tmpDir, '.pi', 'skills');
       const gooseSkillsDir = path.join(tmpDir, '.agents', 'skills');
@@ -1111,6 +1066,7 @@ describe('Skills Discovery and Validation', () => {
 
       // Create existing skills directories (as if they were from previous run)
       const claudeOldSkill = path.join(claudeSkillsDir, 'old-skill');
+      const copilotOldSkill = path.join(copilotSkillsDir, 'old-skill');
       const opencodeOldSkill = path.join(opencodeSkillsDir, 'old-skill');
       const piOldSkill = path.join(piSkillsDir, 'old-skill');
       const gooseOldSkill = path.join(gooseSkillsDir, 'old-skill');
@@ -1122,6 +1078,7 @@ describe('Skills Discovery and Validation', () => {
       const factoryOldSkill = path.join(factorySkillsDir, 'old-skill');
       const antigravityOldSkill = path.join(antigravitySkillsDir, 'old-skill');
       await fs.mkdir(claudeOldSkill, { recursive: true });
+      await fs.mkdir(copilotOldSkill, { recursive: true });
       await fs.mkdir(opencodeOldSkill, { recursive: true });
       await fs.mkdir(piOldSkill, { recursive: true });
       await fs.mkdir(gooseOldSkill, { recursive: true });
@@ -1134,6 +1091,10 @@ describe('Skills Discovery and Validation', () => {
       await fs.mkdir(antigravityOldSkill, { recursive: true });
       await fs.writeFile(
         path.join(claudeOldSkill, SKILL_MD_FILENAME),
+        '# Old Skill',
+      );
+      await fs.writeFile(
+        path.join(copilotOldSkill, SKILL_MD_FILENAME),
         '# Old Skill',
       );
       await fs.writeFile(
@@ -1179,6 +1140,7 @@ describe('Skills Discovery and Validation', () => {
 
       // Verify directories exist before cleanup
       await expect(fs.access(claudeSkillsDir)).resolves.toBeUndefined();
+      await expect(fs.access(copilotSkillsDir)).resolves.toBeUndefined();
       await expect(fs.access(opencodeSkillsDir)).resolves.toBeUndefined();
       await expect(fs.access(piSkillsDir)).resolves.toBeUndefined();
       await expect(fs.access(gooseSkillsDir)).resolves.toBeUndefined();
@@ -1195,6 +1157,7 @@ describe('Skills Discovery and Validation', () => {
 
       // Verify directories were removed
       await expect(fs.access(claudeSkillsDir)).rejects.toThrow();
+      await expect(fs.access(copilotSkillsDir)).rejects.toThrow();
       await expect(fs.access(opencodeSkillsDir)).rejects.toThrow();
       await expect(fs.access(piSkillsDir)).rejects.toThrow();
       await expect(fs.access(gooseSkillsDir)).rejects.toThrow();

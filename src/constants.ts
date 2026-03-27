@@ -56,6 +56,7 @@ export function logVerboseInfo(
 export const SKILLS_DIR = 'skills';
 export const RULER_SKILLS_PATH = '.ruler/skills';
 export const CLAUDE_SKILLS_PATH = '.claude/skills';
+export const COPILOT_SKILLS_PATH = '.github/skills';
 export const CODEX_SKILLS_PATH = '.codex/skills';
 export const OPENCODE_SKILLS_PATH = '.opencode/skills';
 export const PI_SKILLS_PATH = '.pi/skills';

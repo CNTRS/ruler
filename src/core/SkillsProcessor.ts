@@ -4,6 +4,7 @@ import { SkillInfo } from '../types';
 import {
   RULER_SKILLS_PATH,
   CLAUDE_SKILLS_PATH,
+  COPILOT_SKILLS_PATH,
   CODEX_SKILLS_PATH,
   OPENCODE_SKILLS_PATH,
   PI_SKILLS_PATH,
@@ -62,6 +63,7 @@ export async function getSkillsGitignorePaths(
   // Import here to avoid circular dependency
   const {
     CLAUDE_SKILLS_PATH,
+    COPILOT_SKILLS_PATH,
     CODEX_SKILLS_PATH,
     OPENCODE_SKILLS_PATH,
     PI_SKILLS_PATH,
@@ -78,6 +80,7 @@ export async function getSkillsGitignorePaths(
   const selectedTargets = getSelectedSkillTargets(agents);
   const targetPaths: Record<SkillTarget, string> = {
     claude: CLAUDE_SKILLS_PATH,
+    copilot: COPILOT_SKILLS_PATH,
     codex: CODEX_SKILLS_PATH,
     opencode: OPENCODE_SKILLS_PATH,
     pi: PI_SKILLS_PATH,
@@ -121,6 +124,7 @@ function warnOnceExperimental(verbose: boolean, dryRun: boolean): void {
 
 type SkillTarget =
   | 'claude'
+  | 'copilot'
   | 'codex'
   | 'opencode'
   | 'pi'
@@ -134,7 +138,8 @@ type SkillTarget =
   | 'antigravity';
 
 const SKILL_TARGET_TO_IDENTIFIERS = new Map<SkillTarget, readonly string[]>([
-  ['claude', ['claude', 'copilot', 'kilocode']],
+  ['claude', ['claude', 'kilocode']],
+  ['copilot', ['copilot']],
   ['codex', ['codex']],
   ['opencode', ['opencode']],
   ['pi', ['pi']],
@@ -175,6 +180,7 @@ async function cleanupSkillsDirectories(
   verbose: boolean,
 ): Promise<void> {
   const claudeSkillsPath = path.join(projectRoot, CLAUDE_SKILLS_PATH);
+  const copilotSkillsPath = path.join(projectRoot, COPILOT_SKILLS_PATH);
   const codexSkillsPath = path.join(projectRoot, CODEX_SKILLS_PATH);
   const opencodeSkillsPath = path.join(projectRoot, OPENCODE_SKILLS_PATH);
   const piSkillsPath = path.join(projectRoot, PI_SKILLS_PATH);
@@ -200,6 +206,27 @@ async function cleanupSkillsDirectories(
       await fs.rm(claudeSkillsPath, { recursive: true, force: true });
       logVerboseInfo(
         `Removed ${CLAUDE_SKILLS_PATH} (skills disabled)`,
+        verbose,
+        dryRun,
+      );
+    }
+  } catch {
+    // Directory doesn't exist, nothing to clean
+  }
+
+  // Clean up .github/skills
+  try {
+    await fs.access(copilotSkillsPath);
+    if (dryRun) {
+      logVerboseInfo(
+        `DRY RUN: Would remove ${COPILOT_SKILLS_PATH}`,
+        verbose,
+        dryRun,
+      );
+    } else {
+      await fs.rm(copilotSkillsPath, { recursive: true, force: true });
+      logVerboseInfo(
+        `Removed ${COPILOT_SKILLS_PATH} (skills disabled)`,
         verbose,
         dryRun,
       );
@@ -530,11 +557,20 @@ export async function propagateSkills(
   // Copy to Claude skills directory if needed
   if (selectedTargets.has('claude')) {
     logVerboseInfo(
-      `Copying skills to ${CLAUDE_SKILLS_PATH} for Claude Code, GitHub Copilot, and KiloCode`,
+      `Copying skills to ${CLAUDE_SKILLS_PATH} for Claude Code and KiloCode`,
       verbose,
       dryRun,
     );
     await propagateSkillsForClaude(projectRoot, { dryRun });
+  }
+
+  if (selectedTargets.has('copilot')) {
+    logVerboseInfo(
+      `Copying skills to ${COPILOT_SKILLS_PATH} for GitHub Copilot`,
+      verbose,
+      dryRun,
+    );
+    await propagateSkillsForCopilot(projectRoot, { dryRun });
   }
 
   if (selectedTargets.has('codex')) {
@@ -684,6 +720,64 @@ export async function propagateSkillsForClaude(
 
     // Rename temp to target
     await fs.rename(tempDir, claudeSkillsPath);
+  } catch (error) {
+    // Clean up temp directory on error
+    try {
+      await fs.rm(tempDir, { recursive: true, force: true });
+    } catch {
+      // Ignore cleanup errors
+    }
+    throw error;
+  }
+
+  return [];
+}
+
+/**
+ * Propagates skills for GitHub Copilot by copying .ruler/skills to .github/skills.
+ * Uses atomic replace to ensure safe overwriting of existing skills.
+ * Returns dry-run steps if dryRun is true, otherwise returns empty array.
+ */
+export async function propagateSkillsForCopilot(
+  projectRoot: string,
+  options: { dryRun: boolean },
+): Promise<string[]> {
+  const skillsDir = path.join(projectRoot, RULER_SKILLS_PATH);
+  const copilotSkillsPath = path.join(projectRoot, COPILOT_SKILLS_PATH);
+  const copilotDir = path.dirname(copilotSkillsPath);
+
+  // Check if source skills directory exists
+  try {
+    await fs.access(skillsDir);
+  } catch {
+    // No skills directory - return empty
+    return [];
+  }
+
+  if (options.dryRun) {
+    return [`Copy skills from ${RULER_SKILLS_PATH} to ${COPILOT_SKILLS_PATH}`];
+  }
+
+  // Ensure .github directory exists
+  await fs.mkdir(copilotDir, { recursive: true });
+
+  // Use atomic replace: copy to temp, then rename
+  const tempDir = path.join(copilotDir, `skills.tmp-${Date.now()}`);
+
+  try {
+    // Copy to temp directory
+    await copySkillsDirectory(skillsDir, tempDir);
+
+    // Atomically replace the target
+    // First, remove existing target if it exists
+    try {
+      await fs.rm(copilotSkillsPath, { recursive: true, force: true });
+    } catch {
+      // Target didn't exist, that's fine
+    }
+
+    // Rename temp to target
+    await fs.rename(tempDir, copilotSkillsPath);
   } catch (error) {
     // Clean up temp directory on error
     try {
