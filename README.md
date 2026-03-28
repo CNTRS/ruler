@@ -650,7 +650,8 @@ If you run Ruler for agents that do not support native skills, Ruler logs a warn
 
 When skills support is enabled and gitignore integration is active, Ruler automatically adds:
 
-- `.claude/skills/` (for Claude Code, GitHub Copilot, and Kilo Code)
+- `.claude/skills/` (for Claude Code and Kilo Code)
+- `.github/skills/` (for GitHub Copilot)
 - `.codex/skills/` (for OpenAI Codex CLI)
 - `.opencode/skills/` (for OpenCode)
 - `.pi/skills/` (for Pi Coding Agent)
@@ -710,7 +711,8 @@ EOF
 ruler apply
 
 # 3. Skills are now available to compatible agents:
-#    - Claude Code, GitHub Copilot & Kilo Code: .claude/skills/my-skill/
+#    - Claude Code & Kilo Code: .claude/skills/my-skill/
+#    - GitHub Copilot: .github/skills/my-skill/
 #    - OpenAI Codex CLI: .codex/skills/my-skill/
 #    - OpenCode: .opencode/skills/my-skill/
 #    - Pi Coding Agent: .pi/skills/my-skill/
